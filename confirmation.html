@@ -1,139 +1,52 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luxury Booking Ticket</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-  <style>
-    body {
-      background: #f9f9f9;
-      font-family: 'Playfair Display', serif;
-      color: #222;
-      padding: 20px;
-    }
-    .ticket {
-      max-width: 600px;
-      margin: 2rem auto;
-      background: #fff;
-      border-radius: 16px;
-      border: 2px solid #d1c7b7;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-      padding: 2rem;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #eee;
-      margin-bottom: 1.5rem;
-    }
-    .logo {
-      height: 50px;
-    }
-    .booking-id {
-      font-size: 0.9rem;
-      color: #999;
-    }
-    .service-info h2 {
-      font-size: 1.6rem;
-      margin: 0 0 10px 0;
-      color: #1a1a1a;
-    }
-    .info-group {
-      margin-bottom: 1rem;
-    }
-    .info-group p {
-      margin: 0.3rem 0;
-    }
-    .qr-code {
-      text-align: center;
-      margin: 1.5rem 0;
-    }
-    .qr-code canvas {
-      height: 100px;
-    }
-    .footer {
-      border-top: 1px solid #eee;
-      padding-top: 1rem;
-      font-size: 0.85rem;
-      color: #555;
-      text-align: center;
-    }
-    .gold-line {
-      height: 4px;
-      background: linear-gradient(90deg, gold, #c9b37e);
-      margin: 1rem 0;
-      border-radius: 2px;
-    }
-    .btn-print {
-      display: block;
-      width: 100%;
-      margin: 2rem auto 0;
-      padding: 12px;
-      text-align: center;
-      background: black;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Booking Confirmation</title>
+<link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
 
 <div class="ticket">
-  <div class="header">
-    <img src="logo.png" alt="Logo" class="logo">
-    <div class="booking-id" id="booking-id">Booking #</div>
+  <div class="ticket-header">
+    <h1>Booking Confirmation</h1>
+    <img src="logo.png" alt="Logo" style="height:50px;">
   </div>
-
-  <div class="gold-line"></div>
-
-  <div class="service-info">
-    <h2 id="service"></h2>
-    <p><strong>Date:</strong> <span id="date"></span></p>
-    <p><strong>Time:</strong> <span id="time"></span></p>
+  <div class="ticket-body">
+    <div class="field"><span class="field-label">Booking ID:</span> <span id="booking-id"></span></div>
+    <div class="field"><span class="field-label">Name:</span> <span id="booking-name"></span></div>
+    <div class="field"><span class="field-label">Vehicle Registration:</span> <span id="booking-vehicle"></span></div>
+    <div class="field"><span class="field-label">Service:</span> <span id="booking-service"></span></div>
+    <div class="field"><span class="field-label">Date:</span> <span id="booking-date"></span></div>
+    <div class="field"><span class="field-label">Time:</span> <span id="booking-time"></span></div>
   </div>
-
-  <div class="info-group">
-    <p><strong>Name:</strong> <span id="name"></span></p>
-    <p><strong>Vehicle Reg:</strong> <span id="vehicle"></span></p>
-    <p><strong>Email:</strong> <span id="email"></span></p>
-  </div>
-
-  <div class="qr-code" id="qrcode"></div>
-
-  <div class="footer">
-    Luxury Garage • Medway • +44 123 456 789<br/>
-    Thank you for choosing us. Please arrive 10 minutes early.
-  </div>
+  <div id="qrcode"></div>
+  <button class="print-btn" onclick="window.print()">Print Ticket</button>
 </div>
 
-<button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
-
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  const name = params.get('name');
-  const vehicle = params.get('vehicle');
-  const email = params.get('email');
-  const service = params.get('service');
-  const date = params.get('date');
-  const time = params.get('time');
+  function getQueryParams() {
+    const params = {};
+    window.location.search.substr(1).split('&').forEach(function(pair) {
+      if(pair === '') return;
+      var parts = pair.split('=');
+      params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+    });
+    return params;
+  }
 
-  document.getElementById('booking-id').textContent = "Booking #" + id;
-  document.getElementById('name').textContent = name;
-  document.getElementById('vehicle').textContent = vehicle;
-  document.getElementById('email').textContent = email;
-  document.getElementById('service').textContent = service;
-  document.getElementById('date').textContent = date;
-  document.getElementById('time').textContent = time;
+  const params = getQueryParams();
+  document.getElementById('booking-id').textContent = params.id || 'N/A';
+  document.getElementById('booking-name').textContent = params.name || 'N/A';
+  document.getElementById('booking-vehicle').textContent = params.vehicle || 'N/A';
+  document.getElementById('booking-service').textContent = params.service || 'N/A';
+  document.getElementById('booking-date').textContent = params.date || 'N/A';
+  document.getElementById('booking-time').textContent = params.time || 'N/A';
 
-  QRCode.toCanvas(document.getElementById('qrcode'), id || 'Booking', function (error) {
+  const qrText = params.id || 'N/A';
+  QRCode.toCanvas(document.getElementById('qrcode'), qrText, { width: 180 }, function (error) {
     if (error) console.error(error);
   });
 </script>
