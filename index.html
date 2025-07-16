@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Garage Booking Service</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0 1rem;
+    background: #f5f5f5;
+    color: #222;
+  }
+  header {
+    padding: 1rem 0;
+    text-align: center;
+    background: #222;
+    color: white;
+  }
+  h1 {
+    margin: 0;
+    font-weight: 600;
+  }
+  form {
+    max-width: 400px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  }
+  label {
+    display: block;
+    margin-bottom: 0.3rem;
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+  input, select {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  button {
+    margin-top: 1.5rem;
+    width: 100%;
+    background: #222;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  button:hover {
+    background: #444;
+  }
+  @media (max-width: 480px) {
+    form {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Garage Booking Service</h1>
+</header>
+
+<form id="booking-form" autocomplete="off">
+  <label for="name">Name *</label>
+  <input type="text" id="name" name="name" required placeholder="John Doe" />
+
+  <label for="vehicle">Vehicle Registration *</label>
+  <input type="text" id="vehicle" name="vehicle" required placeholder="DA11KVH" />
+
+  <label for="email">Email *</label>
+  <input type="email" id="email" name="email" required placeholder="john@example.com" />
+
+  <label for="service">Select Service *</label>
+  <select id="service" name="service" required>
+    <option value="" disabled selected>Select a service</option>
+    <option value="MOT Service">MOT Service</option>
+    <option value="Tyre Change">Tyre Change</option>
+    <option value="Full Vehicle Service">Full Vehicle Service</option>
+  </select>
+
+  <label for="date">Date *</label>
+  <input type="date" id="date" name="date" required />
+
+  <label for="time">Time *</label>
+  <input type="time" id="time" name="time" required />
+
+  <button type="submit">Create Booking</button>
+</form>
+
+<script>
+  document.getElementById('booking-form').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const data = {
+      id: 'BKG' + Date.now(),
+      name: document.getElementById('name').value.trim(),
+      vehicle: document.getElementById('vehicle').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      service: document.getElementById('service').value,
+      date: document.getElementById('date').value,
+      time: document.getElementById('time').value,
+    };
+
+    if (!data.name || !data.vehicle || !data.email || !data.service || !data.date || !data.time) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const query = new URLSearchParams(data).toString();
+    window.location.href = '/booking/confirmation.html?' + query;
+  });
+</script>
+
+</body>
+</html>
